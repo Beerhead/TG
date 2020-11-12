@@ -2,7 +2,7 @@
 
 #include "AIController.h"
 #include "PatrolComponent.h"
-#include "TP_ThirdPerson\TP_ThirdPersonCharacter.h"
+#include "GameFramework/Character.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "ChooseNextWaypoint.h"
 
@@ -12,7 +12,7 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& Own
 	auto BlackboardComp = OwnerComp.GetBlackboardComponent();
 	auto Index = BlackboardComp->GetValueAsInt(IndexKey.SelectedKeyName);
 	auto WayPoint = BlackboardComp->GetValueAsObject(WaypointKey.SelectedKeyName);
-	auto Owner = Cast<ATP_ThirdPersonCharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	auto Owner = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
 	if (!ensure(Owner)) { return EBTNodeResult::Failed; }
 	if (!ensure(Owner->FindComponentByClass<UPatrollingComponent>())) { return EBTNodeResult::Failed; }
 	auto PatrolArray = Owner->FindComponentByClass<UPatrollingComponent>()->GetPatrolPoints();

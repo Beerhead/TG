@@ -32,7 +32,7 @@ public:
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector GunOffset;
-
+	UFUNCTION(BlueprintCallable)
 	void OnFire();
 
 protected:

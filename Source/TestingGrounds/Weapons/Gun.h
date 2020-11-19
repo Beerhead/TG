@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Gun.generated.h"
 
-
+class AMannequin;
 
 UCLASS()
 class TESTINGGROUNDS_API AGun : public AActor
@@ -14,8 +14,8 @@ class TESTINGGROUNDS_API AGun : public AActor
 	GENERATED_BODY()
 	
 		/** Gun mesh: 1st person view (seen only by self) */
-		UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* FP_Gun;
+		//UPROPERTY(BlueprintReadOnly, Category = Mesh)
+
 
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -39,11 +39,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class USkeletalMeshComponent* FP_Gun;
 
+	
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	AMannequin* Parent;
 
 
 

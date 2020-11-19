@@ -1,9 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 //#include "GameFramework/Pawn.h"
+#include "Gun.h"
+#include "../Character/Mannequin.h"
 #include "Kismet/GameplayStatics.h"
 #include "../Weapons/BallProjectile.h"
-#include "Gun.h"
+
 
 // Sets default values
 AGun::AGun()
@@ -31,14 +33,15 @@ AGun::AGun()
 void AGun::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Parent = Cast<AMannequin>(GetParentActor());
 }
 
 // Called every frame
 void AGun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (!Parent) { return; }
+	if (Parent->bIsFiring) { OnFire(); }
 }
 
 
@@ -56,7 +59,7 @@ void AGun::OnFire()
 
 			//Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
 
 			// spawn the projectile at the muzzle
 			World->SpawnActor<ABallProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);

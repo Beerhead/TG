@@ -114,6 +114,7 @@ void AFirstPersonCharacter::BeginPlay()
 
 void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+	
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
 

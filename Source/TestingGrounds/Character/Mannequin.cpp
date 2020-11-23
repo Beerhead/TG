@@ -43,11 +43,18 @@ void AMannequin::BeginPlay()
 {
 	Super::BeginPlay();
 	if (GunToAttach == NULL) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("USE NORM!"))
 		Gun = GetWorld()->SpawnActor<AGun>(GunToAttach);
-	Gun->AnimInstance = ArmsMesh->GetAnimInstance();
-	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	Gun->AttachToComponent(ArmsMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	
+	if (IsPlayerControlled()) {
+		Gun->AttachToComponent(ArmsMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+		Gun->AnimInstance = ArmsMesh->GetAnimInstance();
+	}
+	else {
+		Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Grip_Socket"));
+		Gun->AnimInstance = GetMesh()->GetAnimInstance();
+	}
+	
+	
 }
 
 // Called every frame
@@ -60,7 +67,6 @@ void AMannequin::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AMannequin::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("input stup!!!!!"))
 	//Super::SetupPlayerInputComponent(PlayerInputComponent);
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
@@ -86,6 +92,8 @@ void AMannequin::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMannequin::LookUpAtRate);
 }
+
+
 
 void AMannequin::MoveForward(float Value)
 {
@@ -122,6 +130,24 @@ void AMannequin::PullTrigger()
 	bIsFiring = true;
 	bIsAiming = true;
 	Gun->OnFire();
+	//if (!ensure(UsedMesh)) { return; }
+	//if (!ensure(SlotAnimMontage)) { return; }
+	//UsedMesh->GetAnimInstance()->PlaySlotAnimationAsDynamicMontage(SlotAnimMontage, FName("Arms"), 0.01f, 0.5f);
+	//UsedMesh->GetAnimInstance()->Montage_Play()
+	//UE_LOG(LogTemp, Warning, TEXT("AM - %i"), SlotAnimMontage->IsA(UAnimMontage::StaticClass()))
 }
 
+//void AMannequin::UnPossessed()
+//{
+//	Super::UnPossessed();
+//	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Grip_Socket"));
+//
+//}
 
+void AMannequin::UnPossessed()
+{
+	Super::UnPossessed();
+	if (!(Gun)) { return; }
+	if (!(GetMesh())) { return; }
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Grip_Socket"));
+}

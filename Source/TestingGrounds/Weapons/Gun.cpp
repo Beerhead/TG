@@ -27,6 +27,7 @@ AGun::AGun()
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
 }
 
 // Called when the game starts or when spawned
@@ -34,6 +35,7 @@ void AGun::BeginPlay()
 {
 	Super::BeginPlay();
 	Parent = Cast<AMannequin>(GetParentActor());
+	
 }
 
 // Called every frame
@@ -46,7 +48,7 @@ void AGun::Tick(float DeltaTime)
 
 
 void AGun::OnFire()
-{
+{	
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{
@@ -71,11 +73,26 @@ void AGun::OnFire()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
+	
+	
+	if (!(AnimInstance)) { return; }
+	if (!(FireAnimationFP)) { return; }
+	if (!(FireAnimationTP)) { return; }
+	if (!(GetAttachParentActor())) { return; }
 
+	if (Cast<AMannequin>(GetAttachParentActor())->IsPlayerControlled())
+	{
 		if (AnimInstance != NULL)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+			AnimInstance->Montage_Play(FireAnimationFP, 1.f);
 		}
-
+	}
+	else 
+	{
+		if (AnimInstance != NULL)
+		{
+			AnimInstance->Montage_Play(FireAnimationTP, 1.f);
+		}
+	}
 }
 	// try and play a firing animation if specified

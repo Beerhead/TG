@@ -59,7 +59,7 @@ protected:
 	void PullTrigger();
 
 
-
+	
 
 
 public:	
@@ -76,4 +76,6 @@ public:
 		TSubclassOf<AGun> GunToAttach;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	AGun* Gun;
+	virtual void UnPossessed() override;
+
 };

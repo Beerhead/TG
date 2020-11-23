@@ -27,7 +27,7 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& Own
 	Index++;
 	auto Lenght = PatrolArray.Num();
 	BlackboardComp->SetValueAsInt(IndexKey.SelectedKeyName, (Index % Lenght));
-	UE_LOG(LogTemp, Warning, TEXT("%i"), Index)
+
 
 	return EBTNodeResult::Succeeded;
 }
